@@ -1,0 +1,14 @@
+{
+    "users": [
+        {
+            "username": "admin",
+            "password": "admin123",
+            "expected": "success"
+        },
+        {
+            "username": "invalid_user",
+            "password": "invalid_password",
+            "expected": "failure"
+        }
+    ]
+}
