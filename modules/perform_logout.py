@@ -21,9 +21,11 @@ def handle_perform_logout(page: Page):
             user_dropdown.click()
             print("User dropdown clicked.")
 
+            page.wait_for_timeout(10000)
             # Click the 'Logout' button
             page.get_by_role('menuitem', name='Logout').click()
             page.wait_for_load_state('networkidle')
+
         else:
             raise Exception("User dropdown not found.")
 
