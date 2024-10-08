@@ -45,6 +45,12 @@ steps:
       python -m playwright install --with-deps
     displayName: 'Install Playwright Browsers with Dependencies'
 
+  # Install xvfb - (X Virtual Framebuffer) is a display server that performs all graphical operations in memory
+  - script: |
+      sudo apt-get update
+      sudo apt-get install -y xvfb
+    displayName: 'Install xvfb'
+
   # Run Playwright BDD Tests
   - script: |
       export HEADLESS=$(HEADLESS)  # Set headless based on variable
