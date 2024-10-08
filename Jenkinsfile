@@ -14,7 +14,7 @@ pipeline {
             steps {
                 bat "C:/Users/dhira/AppData/Local/Programs/Python/Python311/python.exe -m pip install --upgrade pip"
                 bat "C:/Users/dhira/AppData/Local/Programs/Python/Python311/python.exe -m pip install -r requirements.txt"
-                bat "C:/Users/dhira/AppData/Local/Programs/Python/Python311/python.exe -m pip install pytest.html"
+                bat "C:/Users/dhira/AppData/Local/Programs/Python/Python311/python.exe -m pip install pytest-html"
             }
         }
         stage('Install Playwright Browsers') {
@@ -22,13 +22,20 @@ pipeline {
                 bat "C:/Users/dhira/AppData/Local/Programs/Python/Python311/python.exe -m playwright install"
             }
         }
-        stage('Dev - Env Playwright Tests') {
+        stage('Run Playwright Tests') {
             steps {
-                bat "C:/Users/dhira/AppData/Local/Programs/Python/Python311/python.exe -m pytest"
-                bat "C:/Users/dhira/AppData/Local/Programs/Python/Python311/python.exe -m pytest --html=report_playwright_bdd.html"            }
+                script {
+                    def headless = 'true' // Set to 'false' if you want non-headless
+                    if (headless == 'true') {
+                        bat "C:/Users/dhira/AppData/Local/Programs/Python/Python311/python.exe -m pytest --html=report_playwright_bdd.html"
+                    } else {
+                        bat "xvfb-run C:/Users/dhira/AppData/Local/Programs/Python/Python311/python.exe -m pytest --html=report_playwright_bdd.html"
+                    }
+                }
+            }
         }
     }
-   post {
+    post {
         always {
             echo 'Cleaning up...'
             archiveArtifacts artifacts: 'screenshots/**/*', allowEmptyArchive: true
@@ -41,4 +48,3 @@ pipeline {
         }
     }
 }
-
