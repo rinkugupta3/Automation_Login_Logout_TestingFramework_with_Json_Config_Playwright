@@ -10,13 +10,13 @@ pool:
 
 variables:
   PipCache: $(Pipeline.Workspace)/.pip_cache
-  HEADLESS: 'true'  # Default to headless mode
+  HEADLESS: 'true'  # Run tests in headless mode
 
 steps:
   # Set up Python environment
   - task: UsePythonVersion@0
     inputs:
-      versionSpec: '3.11'  # Specify your Python version here
+      versionSpec: '3.11'  # Specify your Python version here and check locally with "python --version"
       addToPath: true
 
   # Create Pip Cache Directory
@@ -45,20 +45,10 @@ steps:
       python -m playwright install --with-deps
     displayName: 'Install Playwright Browsers with Dependencies'
 
-  # Install xvfb - (X Virtual Framebuffer) is a display server that performs all graphical operations in memory
+  # Run Playwright BDD Tests with headless mode enabled
   - script: |
-      sudo apt-get update
-      sudo apt-get install -y xvfb
-    displayName: 'Install xvfb'
-
-  # Run Playwright BDD Tests
-  - script: |
-      export HEADLESS=$(HEADLESS)  # Set headless based on variable
-      if [ "$HEADLESS" == "true" ]; then
-          pytest --html=report_playwright_bdd.html --maxfail=3 --disable-warnings -v
-      else
-          xvfb-run pytest --html=report_playwright_bdd.html --maxfail=3 --disable-warnings -v
-      fi
+      export HEADLESS=true  # Ensure headless mode for CI
+      pytest --html=report_playwright_bdd.html --maxfail=3 --disable-warnings -v
     displayName: 'Run Playwright BDD Tests'
 
   # Publish HTML report as artifact
