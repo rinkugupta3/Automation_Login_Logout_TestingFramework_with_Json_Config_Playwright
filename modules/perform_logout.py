@@ -18,8 +18,11 @@ def handle_perform_logout(page: Page):
             i: This targets all <i> elements that are children of the <span> elements.
         """
         user_dropdown = page.locator('span i')
+        # Original: if user_dropdown.is_visible():
+        # Fix: wait for dropdown to be visible with increased timeout for slower browsers like webkit
+        user_dropdown.wait_for(state='visible', timeout=30000)
         if user_dropdown.is_visible():
-            user_dropdown.wait_for(state='visible', timeout=10000)
+            user_dropdown.wait_for(state='visible', timeout=30000)
             user_dropdown.click()
             print("User dropdown clicked.")
 
