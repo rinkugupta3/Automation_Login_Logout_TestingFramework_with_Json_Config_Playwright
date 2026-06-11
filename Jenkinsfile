@@ -29,16 +29,18 @@ pipeline {
                 // Original: install pytest-html (fixed typo: pytest.html -> pytest-html)
                 bat "C:/Users/dhira/AppData/Local/Programs/Python/Python311/python.exe -m pip install pytest-html"
 
-                // New: install same dependencies inside venv
-                bat 'venv\\Scripts\\pip.exe install --upgrade pip'
-                bat 'venv\\Scripts\\pip.exe install -r requirements.txt'
-                bat 'venv\\Scripts\\pip.exe install pytest-html'
+                // New: upgrade pip inside venv (must use python.exe -m pip, not pip.exe directly)
+                bat 'venv\\Scripts\\python.exe -m pip install --upgrade pip'
+                // New: install requirements inside venv
+                bat 'venv\\Scripts\\python.exe -m pip install -r requirements.txt'
+                // New: install pytest-html inside venv
+                bat 'venv\\Scripts\\python.exe -m pip install pytest-html'
             }
         }
 
         stage('Install Playwright Browsers') {
             steps {
-                // Original: install all browsers
+                // Original: install all browsers using global python
                 bat "C:/Users/dhira/AppData/Local/Programs/Python/Python311/python.exe -m playwright install"
                 // New: install chromium inside venv
                 bat 'venv\\Scripts\\python.exe -m playwright install chromium'
